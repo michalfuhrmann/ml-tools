@@ -1,7 +1,5 @@
 package com.mfuhrmann.ml.tools.opencv.bot.qwop;
 
-import java.io.IOException;
-
 import org.deeplearning4j.rl4j.learning.ILearning;
 import org.deeplearning4j.rl4j.learning.Learning;
 import org.deeplearning4j.rl4j.learning.async.nstep.discrete.AsyncNStepQLearningDiscrete;
@@ -16,6 +14,8 @@ import org.deeplearning4j.rl4j.network.dqn.DQNFactoryStdDense;
 import org.deeplearning4j.rl4j.network.dqn.IDQN;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.util.DataManager;
+
+import java.io.IOException;
 
 public class Toy {
 

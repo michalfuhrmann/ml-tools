@@ -5,9 +5,12 @@
     <parent>
         <artifactId>games</artifactId>
         <groupId>com.mfuhrmann.ml</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
+    <packaging>jar</packaging>
 
     <artifactId>snake</artifactId>
 
@@ -17,7 +20,7 @@
             <artifactId>guava</artifactId>
             <version>24.1-jre</version>
         </dependency>
-    </dependencies>
 
+    </dependencies>
 
 </project>

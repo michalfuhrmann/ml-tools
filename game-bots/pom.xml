@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tools</artifactId>
         <groupId>com.mfuhrmann.ml</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,13 +18,9 @@
         <start-class>com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.SnakeBot</start-class>
         <jfreechart.version>1.0.13</jfreechart.version>
     </properties>
-    <dependencies>
-        <!--<dependency>-->
-        <!--<groupId>com.mfuhrmann.ml</groupId>-->
-        <!--<artifactId>open-cv</artifactId>-->
-        <!--<version>0.0.1-SNAPSHOT</version>-->
-        <!--</dependency>-->
 
+
+    <dependencies>
 
         <!--<dependency>-->
         <!--<groupId>org.openpnp</groupId>-->
@@ -33,12 +29,6 @@
         <!--</dependency>-->
 
         <!-- https://mvnrepository.com/artifact/io.jenetics/jenetics -->
-
-        <dependency>
-            <groupId>com.mfuhrmann.ml</groupId>
-            <artifactId>snake</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>ale-platform</artifactId>
@@ -71,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-ui_2.10</artifactId>
+            <artifactId>deeplearning4j-ui_2.11</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.tess4j</groupId>
@@ -83,26 +73,13 @@
             <artifactId>typetools</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mfuhrmann.ml</groupId>
+            <artifactId>snake</artifactId>
+        </dependency>
+
     </dependencies>
-    <build>
-        <plugins>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <mainClass>com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.conv.SnakeBotConv</mainClass>
 
-                </configuration>
-                <!--<configuration>-->
-                <!--<mainClass>-->
-                <!--com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.SnakeBot-->
-                <!--</mainClass>-->
-                <!--</configuration>-->
-            </plugin>
-
-        </plugins>
-    </build>
 
 </project>

@@ -1,7 +1,6 @@
 package com.mfuhrmann.ml.tools.opencv.bot.gene.qlearning;
 
 import com.mfuhrmann.ml.games.snake.SnakeWindow;
-import com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.SnakeLearningProcess;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -13,11 +12,12 @@ import org.deeplearning4j.rl4j.network.dqn.DQNFactoryStdDense;
 import org.deeplearning4j.rl4j.network.dqn.IDQN;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.util.DataManager;
-//import org.opencv.core.Core;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+
+//import org.opencv.core.Core;
 
 public class GeneBot {
 

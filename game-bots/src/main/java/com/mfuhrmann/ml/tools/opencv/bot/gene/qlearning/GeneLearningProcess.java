@@ -1,6 +1,5 @@
 package com.mfuhrmann.ml.tools.opencv.bot.gene.qlearning;
 
-import com.mfuhrmann.ml.games.snake.*;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.ArrayObservationSpace;
@@ -9,7 +8,6 @@ import org.deeplearning4j.rl4j.space.ObservationSpace;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GeneLearningProcess implements MDP<GeneState, Integer, DiscreteSpace> {

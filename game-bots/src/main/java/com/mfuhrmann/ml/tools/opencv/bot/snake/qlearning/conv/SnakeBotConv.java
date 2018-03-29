@@ -1,13 +1,11 @@
 package com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.conv;
 
 import com.mfuhrmann.ml.games.snake.SnakeWindow;
-import com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.SnakeLearningProcess;
 import com.mfuhrmann.ml.tools.opencv.bot.snake.qlearning.SnakeState;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.HistoryProcessor;
-import org.deeplearning4j.rl4j.learning.async.nstep.discrete.AsyncNStepQLearningDiscrete;
 import org.deeplearning4j.rl4j.learning.sync.SyncLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteConv;
@@ -16,13 +14,14 @@ import org.deeplearning4j.rl4j.network.dqn.IDQN;
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.util.DataManager;
-//import org.nd4j.jita.conf.CudaEnvironment;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+
+//import org.nd4j.jita.conf.CudaEnvironment;
 
 public class SnakeBotConv {
     public static final int NUM_HIDDEN_NODES = SnakeWindow.MAX_HEIGHT * SnakeWindow.MAX_HEIGHT / 2;

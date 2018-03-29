@@ -1,4 +1,4 @@
-package org.deeplearning4j.examples.feedforward.classification;
+package com.mfuhrmann.ml.tools.neuralnetworks.kaggle.titanic;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;

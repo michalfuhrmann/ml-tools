@@ -34,8 +34,6 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.shade.jackson.annotation.JsonProperty;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +50,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Alex Black
  */
-public class BasicHyperparameterOptimizationExample {
+public class TitanicWithHyperParametrization {
 
     public static void main(String[] args) throws Exception {
 
