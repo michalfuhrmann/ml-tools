@@ -21,10 +21,6 @@
         <module>sentiment-analysis</module>
     </modules>
 
-
-
-
-    
     <packaging>pom</packaging>
 
     <name>tools</name>
