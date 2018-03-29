@@ -18,7 +18,7 @@
         <module>games</module>
         <module>game-bots</module>
         <module>neural-networks-dl4j</module>
-        <!--<module>sentiment-analysis</module>-->
+        <module>sentiment-analysis</module>
     </modules>
 
 

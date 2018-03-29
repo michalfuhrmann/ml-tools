@@ -62,8 +62,6 @@ public class SnakeLearningProcess implements MDP<SnakeState, Integer, DiscreteSp
         try {
             snakeWindow.playSingleTurn(Direction.values()[action]);
         } catch (SnakeCollisionException e) {
-//            System.out.println("done-collision");
-
             done = true;
         }
 
@@ -78,11 +76,7 @@ public class SnakeLearningProcess implements MDP<SnakeState, Integer, DiscreteSp
 
     @Override
     public boolean isDone() {
-
-        boolean b = done || currentScore < -20;
-
-//        System.out.println("isDone " + b);
-        return b;
+        return done || currentScore < -20;
     }
 
     @Override

@@ -46,7 +46,6 @@ public class SnakeBot {
 
         Thread t = getThread(mdp, atomicInteger);
 
-
         //Initialize the user interface backend
         UIServer uiServer = UIServer.getInstance();
 

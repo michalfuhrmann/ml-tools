@@ -85,31 +85,10 @@ public class TitanicKaggleExcercise {
         DataSetIterator trainIter = new RecordReaderDataSetIterator(rr, batchSize, 1, 2);
 
         //Load the test/evaluation data:
-        RecordReader rrTest = new CSVRecordReader(1);
-        rrTest.initialize(new FileSplit(new File(filenameTest)));
-        DataSetIterator testIter = new RecordReaderDataSetIterator(rrTest, batchSize, 1, 2);
+        DataSetIterator testIter = createDataSetiterator(batchSize, filenameTest);
 
         //log.info("Build model....");
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .seed(seed)
-                .iterations(1)
-                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .learningRate(learningRate)
-                .updater(Updater.NESTEROVS)
-                .list()
-                .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.RELU)
-                        .build())
-//                .layer(1, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
-//                        .weightInit(WeightInit.XAVIER)
-//                        .activation(Activation.RELU)
-//                        .build())
-                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.SOFTMAX)
-                        .nIn(numHiddenNodes).nOut(numOutputs).build())
-                .pretrain(false).backprop(true).build();
+        MultiLayerConfiguration conf = buildNet(seed, learningRate, numInputs, numOutputs, numHiddenNodes);
 
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
@@ -122,6 +101,38 @@ public class TitanicKaggleExcercise {
 
         Evaluation eval = evaluteModel(numOutputs, testIter, model);
         System.out.println(eval.stats());
+
+
+    }
+
+    private static MultiLayerConfiguration buildNet(int seed, double learningRate, int numInputs, int numOutputs, int numHiddenNodes) {
+        return new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .iterations(1)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .learningRate(learningRate)
+                .updater(Updater.NESTEROVS)
+                .list()
+                .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.RELU)
+                        .build())
+                //                .layer(1, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                //                        .weightInit(WeightInit.XAVIER)
+                //                        .activation(Activation.RELU)
+                //                        .build())
+                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.SOFTMAX)
+                        .nIn(numHiddenNodes).nOut(numOutputs).build())
+                .pretrain(false).backprop(true).build();
+    }
+
+    @NotNull
+    private static DataSetIterator createDataSetiterator(int batchSize, String filenameTest) throws IOException, InterruptedException {
+        RecordReader rrTest = new CSVRecordReader(1);
+        rrTest.initialize(new FileSplit(new File(filenameTest)));
+        return new RecordReaderDataSetIterator(rrTest, batchSize, 1, 2);
     }
 
     @NotNull
