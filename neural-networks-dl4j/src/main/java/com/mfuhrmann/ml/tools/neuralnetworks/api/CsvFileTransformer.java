@@ -33,15 +33,18 @@ public class CsvFileTransformer {
     public static void main(String[] args) throws IOException, URISyntaxException {
 
 
+
+
         URI inputFile = CsvFileTransformer.class.getResource("/classification/titanic/train.csv").toURI();
         URI outputFile = new URI(CsvFileTransformer.class.getResource("/classification/titanic/").toURI() + "train-out.csv");
+
 
 
         Path inputPath = Paths.get(inputFile);
         Path outputPath = Paths.get("test-out.csv");
 
         new CsvTransformerBuilder()
-                .setRemoveColumns("Name", "Ticket")
+                .setRemoveColumns("Name", "Ticket","PassengerId","Fare")
 
                 .build().transformCSV(inputPath, outputPath);
 

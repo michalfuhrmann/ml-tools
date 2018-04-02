@@ -12,6 +12,7 @@ import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 //import org.deeplearning4j.examples.utilities.MnistDownloader;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.Updater;
@@ -24,11 +25,14 @@ import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.FileStatsStorage;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.util.ModelSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -66,15 +70,15 @@ public class TitanicKaggleExcercise {
         Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
         int batchSize = 891;
         int seed = 123;
-        double learningRate = 0.001;
+        double learningRate = 0.01;
         double l2 = 0.01;
         //Number of epochs (full passes of the data)
         int nEpochs = 100_000;
         //First: Set up the hyperparameter configuration space. This is like a MultiLayerConfiguration, but can have either
         // fixed values or values to optimize, for each hyperparameter
-        int numInputs = 8;
+        int numInputs = 7;
         int numOutputs = 2;
-        int numHiddenNodes = 120;
+        int numHiddenNodes = 30;
 
         final String filenameTrain = new ClassPathResource("/classification/titanic/train-out.csv").getFile().getPath();
         final String filenameTest = new ClassPathResource("/classification/titanic/train-out.csv").getFile().getPath();
@@ -82,10 +86,11 @@ public class TitanicKaggleExcercise {
         //Load the training data:
         RecordReader rr = new CSVRecordReader(1);
         rr.initialize(new FileSplit(new File(filenameTrain)));
-        DataSetIterator trainIter = new RecordReaderDataSetIterator(rr, batchSize, 1, 2);
+        DataSetIterator trainIter = createDataSetiterator(batchSize, filenameTrain);
 
-        //Load the test/evaluation data:
-        DataSetIterator testIter = createDataSetiterator(batchSize, filenameTest);
+        DataNormalization dataNormalization = new NormalizerStandardize();
+        dataNormalization.fit(trainIter);
+        trainIter.setPreProcessor(dataNormalization);
 
         //log.info("Build model....");
         MultiLayerConfiguration conf = buildNet(seed, learningRate, numInputs, numOutputs, numHiddenNodes);
@@ -95,11 +100,36 @@ public class TitanicKaggleExcercise {
         model.init();
         model.setListeners(new ScoreIterationListener(1000), new StatsListener(ss));    //Print score every 10 parameter updates
 
-        for (int n = 0; n < nEpochs; n++) {
+        DataSetIterator testIter = createDataSetiterator(batchSize, filenameTest);
+        testIter.setPreProcessor(dataNormalization);
+        DataSet next = testIter.next();
+
+        for (int i = 0; i < 10; i++) {
             model.fit(trainIter);
         }
 
-        Evaluation eval = evaluteModel(numOutputs, testIter, model);
+        long counter = 0;
+
+        double score = 1.0;
+
+        while (score > 0.001) {
+
+            model.fit(trainIter);
+            score = model.score(next);
+
+            if (counter++ % 1000 == 0) {
+                ModelSerializer.writeModel(model, new File("titanicNet.ml"), true);
+                System.out.println("Score is " + score);
+                Evaluation eval = evaluteModel(numOutputs, createDataSetiterator(batchSize, filenameTest), model);
+                System.out.println(eval.stats());
+
+            }
+
+        }
+
+        Evaluation eval = evaluteModel(numOutputs, createDataSetiterator(batchSize, filenameTest), model);
+
+
         System.out.println(eval.stats());
 
 
@@ -111,17 +141,24 @@ public class TitanicKaggleExcercise {
                 .iterations(1)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
+                .l2(0.1)
+                .regularization(true)
+                .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
                 .updater(Updater.NESTEROVS)
                 .list()
                 .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
                         .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.RELU)
+                        .activation(Activation.LEAKYRELU)
                         .build())
-                //                .layer(1, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
-                //                        .weightInit(WeightInit.XAVIER)
-                //                        .activation(Activation.RELU)
-                //                        .build())
-                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(1, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.LEAKYRELU)
+                        .build())
+                .layer(2, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.LEAKYRELU)
+                        .build())
+                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.SOFTMAX)
                         .nIn(numHiddenNodes).nOut(numOutputs).build())
@@ -132,7 +169,7 @@ public class TitanicKaggleExcercise {
     private static DataSetIterator createDataSetiterator(int batchSize, String filenameTest) throws IOException, InterruptedException {
         RecordReader rrTest = new CSVRecordReader(1);
         rrTest.initialize(new FileSplit(new File(filenameTest)));
-        return new RecordReaderDataSetIterator(rrTest, batchSize, 1, 2);
+        return new RecordReaderDataSetIterator(rrTest, batchSize, 0, 2);
     }
 
     @NotNull
@@ -144,8 +181,8 @@ public class TitanicKaggleExcercise {
             INDArray features = t.getFeatureMatrix();
             INDArray lables = t.getLabels();
             INDArray predicted = model.output(features, false);
-
             eval.eval(lables, predicted);
+
 
         }
         return eval;
